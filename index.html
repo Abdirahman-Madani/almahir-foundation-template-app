@@ -1,0 +1,1668 @@
+<!doctype html>
+<html lang="ar" dir="rtl" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5">
+<meta name="theme-color" content="#2d5ee8">
+<title>مركز طباعة كشوف الطلاب</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+:root{
+  --bg:#f4f6fb;--surface:#fff;--surface-2:#f8fafc;--surface-3:#eef2f9;
+  --border:#e1e6ef;--border-strong:#cbd5e1;
+  --text:#0f172a;--text-muted:#64748b;
+  --primary:#2d5ee8;--primary-hover:#1e4bd0;--primary-soft:#dde7fd;--primary-text:#1e3a8a;
+  --danger:#dc2626;--danger-soft:#fee2e2;
+  --ok:#16a34a;--ok-soft:#dcfce7;
+  --warning:#d97706;--warning-soft:#fef3c7;
+  --shadow-sm:0 1px 2px rgba(15,23,42,.06);
+  --shadow-md:0 4px 12px -2px rgba(15,23,42,.1);
+  --shadow-lg:0 12px 32px -6px rgba(15,23,42,.18);
+  --radius:12px;--radius-sm:8px;--radius-lg:16px;
+  --transition:.2s cubic-bezier(.4,0,.2,1);
+}
+[data-theme="dark"]{
+  --bg:#0a1020;--surface:#131c30;--surface-2:#1a2540;--surface-3:#0f1830;
+  --border:#253352;--border-strong:#354566;
+  --text:#e2e8f5;--text-muted:#8896b0;
+  --primary:#4a7fee;--primary-hover:#3b6fe0;--primary-soft:#1e3568;--primary-text:#b8c9f8;
+  --danger:#f87171;--danger-soft:#451a1a;
+  --ok:#4ade80;--ok-soft:#14532d;
+  --warning:#fbbf24;--warning-soft:#78350f;
+  --shadow-sm:0 1px 2px rgba(0,0,0,.4);
+  --shadow-md:0 4px 12px -2px rgba(0,0,0,.5);
+  --shadow-lg:0 12px 32px -6px rgba(0,0,0,.6);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;margin:0}
+body{
+  background:var(--bg);color:var(--text);
+  font-family:'Cairo',Tahoma,Arial,sans-serif;
+  transition:background var(--transition),color var(--transition);
+  height:100vh;display:flex;flex-direction:column;overflow:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+button{font:inherit;cursor:pointer;border:0;background:none;color:inherit;transition:all var(--transition)}
+input,select,textarea{
+  width:100%;border:1px solid var(--border);border-radius:var(--radius-sm);
+  padding:8px 10px;font:inherit;font-size:13px;color:var(--text);background:var(--surface);
+  transition:border-color var(--transition),box-shadow var(--transition);
+}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-soft)}
+textarea{resize:vertical;min-height:70px;line-height:1.5}
+input[type=checkbox],input[type=radio]{width:auto;accent-color:var(--primary);cursor:pointer}
+input[type=color]{padding:3px;height:36px;cursor:pointer}
+input[type=range]{padding:0;accent-color:var(--primary)}
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border-strong);border-radius:10px;border:2px solid var(--bg)}
+
+/* ========== LAYOUT ========== */
+.app{display:flex;flex-direction:column;flex:1;overflow:hidden;min-height:0}
+.topbar{
+  background:linear-gradient(135deg,#2d5ee8 0%,#1e3a8a 100%);
+  color:#fff;padding:12px 20px;
+  display:flex;justify-content:space-between;align-items:center;
+  gap:12px;flex-shrink:0;box-shadow:0 2px 12px rgba(30,58,138,.25);z-index:10;
+}
+.brand{display:flex;align-items:center;gap:10px;min-width:0}
+.brand-icon{
+  width:40px;height:40px;border-radius:10px;
+  background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.25);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.brand-icon svg{width:20px;height:20px}
+.topbar h1{margin:0;font-size:15px;font-weight:800;line-height:1.2}
+.topbar p{margin:2px 0 0;font-size:11px;opacity:.85}
+.topbar-actions{display:flex;gap:6px;align-items:center;flex-shrink:0}
+.icon-btn{
+  width:38px;height:38px;border-radius:10px;
+  background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.28);
+  color:#fff;display:flex;align-items:center;justify-content:center;
+}
+.icon-btn:hover{background:rgba(255,255,255,.28)}
+.icon-btn svg{width:18px;height:18px}
+
+.mobile-tabs{display:none;gap:6px;padding:10px;background:var(--surface);border-bottom:1px solid var(--border);flex-shrink:0}
+.mtab{
+  flex:1;padding:10px;border:1px solid var(--border);border-radius:10px;
+  background:var(--surface-2);color:var(--text-muted);font-weight:700;font-size:12px;
+  display:flex;align-items:center;justify-content:center;gap:6px;
+}
+.mtab.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+.mtab svg{width:14px;height:14px}
+
+.app-layout{display:grid;grid-template-columns:420px minmax(0,1fr);flex:1;overflow:hidden;min-height:0}
+.sidebar{
+  background:var(--surface);border-left:1px solid var(--border);
+  overflow-y:auto;padding:12px;overscroll-behavior:contain;
+}
+.preview{
+  background:var(--surface-3);overflow-y:auto;padding:16px;
+  overscroll-behavior:contain;
+}
+
+/* ========== SECTIONS ========== */
+.section{
+  border:1px solid var(--border);border-radius:var(--radius);
+  margin:0 0 10px;background:var(--surface);overflow:hidden;
+}
+.section[open]{box-shadow:var(--shadow-sm)}
+.section summary{
+  padding:11px 13px;cursor:pointer;font-weight:700;font-size:13px;
+  list-style:none;display:flex;align-items:center;gap:8px;
+  background:var(--surface-2);
+}
+.section summary::-webkit-details-marker{display:none}
+.section summary::after{content:'▾';margin-right:auto;font-size:10px;color:var(--text-muted);transition:transform var(--transition)}
+.section:not([open]) summary::after{transform:rotate(-90deg)}
+.section summary:hover{background:var(--surface-3)}
+.section summary svg{width:16px;height:16px;color:var(--primary)}
+.section-body{padding:12px}
+
+/* ========== FORMS ========== */
+.field{margin:8px 0}
+.field label{display:block;font-size:11px;font-weight:700;margin-bottom:4px;color:var(--text-muted)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.hint{font-size:11px;color:var(--text-muted);margin-top:4px;line-height:1.5}
+
+/* ========== BUTTONS ========== */
+.btn{
+  padding:9px 14px;border-radius:var(--radius-sm);font-weight:700;font-size:12.5px;
+  display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  transition:all var(--transition);
+}
+.btn svg{width:14px;height:14px}
+.btn-primary{background:var(--primary);color:#fff}
+.btn-primary:hover{background:var(--primary-hover);transform:translateY(-1px);box-shadow:var(--shadow-md)}
+.btn-soft{background:var(--primary-soft);color:var(--primary-text)}
+.btn-soft:hover{background:var(--primary);color:#fff}
+.btn-danger{background:var(--danger-soft);color:var(--danger)}
+.btn-danger:hover{background:var(--danger);color:#fff}
+.btn-sm{padding:6px 10px;font-size:11px}
+.btn-block{width:100%}
+
+/* ========== TYPE GRID ========== */
+.type-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:6px;margin-bottom:8px}
+.type-grid button{
+  padding:9px 6px;border:2px solid var(--border);background:var(--surface);
+  border-radius:var(--radius-sm);font-size:11px;font-weight:700;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.type-grid button:hover{border-color:var(--primary);color:var(--primary)}
+.type-grid button.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+.type-actions{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+
+/* ========== TEMPLATE LIST ========== */
+.template-list{display:flex;flex-direction:column;gap:5px;max-height:260px;overflow-y:auto;padding:2px}
+.tpl-item{
+  display:flex;justify-content:space-between;align-items:center;gap:6px;
+  padding:9px 11px;border:1.5px solid var(--border);border-radius:var(--radius-sm);
+  background:var(--surface);font-size:12px;transition:all var(--transition);
+}
+.tpl-item:hover{border-color:var(--border-strong)}
+.tpl-item.active{border-color:var(--ok);background:var(--ok-soft)}
+.tpl-item > span{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:700;display:flex;align-items:center;gap:6px}
+.badge{background:var(--ok);color:#fff;font-size:9px;padding:2px 6px;border-radius:4px;font-weight:700}
+.tpl-actions{display:flex;gap:3px;flex-shrink:0}
+.tpl-actions button{
+  width:26px;height:26px;border-radius:6px;font-size:10px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;
+}
+.tpl-actions button svg{width:12px;height:12px}
+.tpl-actions .apply{background:var(--primary);color:#fff;padding:0 8px;width:auto}
+.tpl-actions .copy{background:#e0f2fe;color:#0369a1}
+.tpl-actions .rename{background:#fef3c7;color:#92400e}
+.tpl-actions .del{background:var(--danger-soft);color:var(--danger)}
+[data-theme="dark"] .tpl-actions .copy{background:#0c4a6e;color:#bae6fd}
+[data-theme="dark"] .tpl-actions .rename{background:#78350f;color:#fde68a}
+
+/* ========== DRAGGABLE LIST ========== */
+.sortable-list{display:flex;flex-direction:column;gap:6px}
+.sortable-row{
+  display:grid;grid-template-columns:auto 1fr auto;gap:6px;
+  padding:8px;background:var(--surface-2);border:1px solid var(--border);
+  border-radius:var(--radius-sm);align-items:start;
+}
+.sortable-row.dragging{opacity:.5;box-shadow:var(--shadow-lg)}
+.drag-handle{
+  width:22px;height:32px;border-radius:5px;cursor:grab;
+  color:var(--text-muted);display:flex;align-items:center;justify-content:center;
+  user-select:none;
+}
+.drag-handle:active{cursor:grabbing}
+.drag-handle:hover{background:var(--surface-3)}
+.drag-handle svg{width:14px;height:14px}
+.sortable-row-content{min-width:0}
+.sortable-row-content input,
+.sortable-row-content select{padding:5px 7px;font-size:11px}
+.arrows{display:flex;flex-direction:column;gap:2px}
+.arrow-btn{
+  width:22px;height:16px;border-radius:4px;
+  background:var(--primary-soft);color:var(--primary-text);
+  display:flex;align-items:center;justify-content:center;
+}
+.arrow-btn:hover:not(:disabled){background:var(--primary);color:#fff}
+.arrow-btn:disabled{opacity:.3;cursor:not-allowed}
+.arrow-btn svg{width:10px;height:10px}
+
+.col-row{display:grid;grid-template-columns:minmax(0,1fr) 46px 46px auto;gap:4px;align-items:start}
+.col-row input[type=number]{text-align:center}
+.col-row .second-row{grid-column:1/-1;display:grid;grid-template-columns:1fr 100px;gap:4px;margin-top:4px}
+
+.dyn-row{display:grid;grid-template-columns:1.2fr .7fr 1fr;gap:4px;align-items:start}
+
+/* ========== TABLE STYLE GRID ========== */
+.style-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.style-item label{display:block;font-size:10px;font-weight:700;margin-bottom:3px;color:var(--text-muted)}
+.style-item input,.style-item select{padding:5px 7px;font-size:11px}
+.zebra-item{
+  grid-column:1/-1;display:grid;grid-template-columns:1fr 70px;gap:8px;align-items:center;
+  padding:8px;background:var(--surface-2);border-radius:var(--radius-sm);
+}
+.zebra-item label{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:700;margin:0;cursor:pointer}
+
+/* ========== RANGE MODES ========== */
+.range-modes{
+  display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;margin:8px 0;
+  background:var(--surface-2);padding:4px;border-radius:var(--radius-sm);
+}
+.range-modes button{padding:7px 4px;border-radius:6px;font-size:11px;font-weight:700;color:var(--text-muted)}
+.range-modes button.active{background:var(--primary);color:#fff}
+
+/* ========== DAYS ========== */
+.days{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;padding:9px;background:var(--surface-2);border-radius:var(--radius-sm)}
+.days label{display:flex;align-items:center;gap:6px;font-size:11.5px;cursor:pointer}
+.days-actions{display:flex;gap:6px;margin-top:6px}
+.days-actions button{
+  flex:1;padding:6px;font-size:11px;border:1px solid var(--border);
+  background:var(--surface);border-radius:6px;font-weight:700;
+}
+.days-actions button:hover{background:var(--primary-soft);color:var(--primary-text)}
+
+/* ========== FONT SCALE ========== */
+.font-scale-value{
+  display:flex;align-items:center;justify-content:space-between;
+  font-size:11px;font-weight:700;color:var(--text);margin-bottom:4px;
+}
+.font-scale-value strong{color:var(--primary);font-size:13px}
+
+/* ========== SHEETS ========== */
+.preview-head{
+  max-width:1100px;margin:0 auto 12px;
+  display:flex;justify-content:space-between;align-items:center;
+  gap:10px;flex-wrap:wrap;
+}
+.preview-head strong{font-size:14px}
+.preview-head span{font-size:12px;color:var(--text-muted)}
+.sheets-scroll{display:flex;justify-content:center;padding-bottom:20px}
+.sheets{display:flex;flex-direction:column;align-items:center;gap:16px;transform-origin:top center;transition:transform .15s}
+.blank{
+  padding:50px 30px;text-align:center;color:var(--text-muted);
+  background:var(--surface);border-radius:var(--radius);
+  border:2px dashed var(--border);font-size:13px;display:flex;
+  flex-direction:column;align-items:center;gap:12px;
+}
+.blank svg{width:48px;height:48px;opacity:.4}
+
+.paper{
+  background:#fff;color:#000;font-family:Tahoma,Arial,sans-serif;
+  box-shadow:var(--shadow-lg);padding:10mm;position:relative;flex:none;
+  direction:rtl;break-after:page;page-break-after:always;overflow:hidden;
+}
+[dir="ltr"] .paper{direction:ltr}
+.paper:last-child{break-after:auto;page-break-after:auto}
+.paper.portrait{width:210mm;min-height:297mm}
+.paper.landscape{width:297mm;min-height:210mm}
+[data-theme="dark"] .paper{filter:brightness(.94) contrast(1.02)}
+
+/* HEADER ALIGNMENT FIX */
+.paper .header-block{text-align:var(--header-align, center);margin-bottom:6px}
+.paper .logo{max-height:var(--logo-size,14mm);max-width:40mm;display:block;margin-bottom:4px}
+.paper h3{
+  text-align:inherit; /* Inherit from .header-block */
+  font-size:calc(var(--header-size,16px) * var(--font-scale,1));
+  margin:0 0 4px;font-weight:800;color:var(--header-color,#000);
+}
+.paper .subheader{
+  text-align:inherit; /* Inherit from .header-block */
+  font-size:calc(11px * var(--font-scale,1));
+  font-weight:700;line-height:1.7;margin:2px 0;
+}
+
+.paper .seq{position:absolute;top:6mm;left:8mm;font-size:10px;color:#333;font-weight:700}
+.paper .pagefoot{position:absolute;bottom:3mm;left:0;right:0;text-align:center;font-size:9px;color:#555}
+.paper .meta-flex{
+  display:flex;flex-wrap:wrap;gap:4px 10px;
+  font-size:calc(11px * var(--font-scale,1));font-weight:700;
+  margin-bottom:6px;padding:4px 0;
+}
+.paper .meta-item{display:flex;align-items:baseline;gap:4px}
+.paper .meta-item.full{width:100%}
+.paper .meta-item.half{width:calc(50% - 5px)}
+.paper .dotted{display:inline-block;flex:1;border-bottom:1px dotted #111;min-height:12px;padding:0 3px}
+
+/* TABLE ALIGNMENT FIX */
+.paper table{
+  width:100%;border-collapse:collapse;table-layout:fixed;
+  text-align:var(--tbl-align, center); /* New Variable */
+  direction:rtl;margin-top:4px;
+  color:var(--tbl-cell-color,#000);
+  font-family:var(--tbl-font,Tahoma,Arial,sans-serif);
+}
+.paper th,.paper td{
+  border:var(--tbl-border-width,1px) var(--tbl-border-style,solid) var(--tbl-border-color,#111);
+  padding:var(--tbl-padding,3px);
+  overflow-wrap:anywhere;vertical-align:middle;
+  font-size:calc(var(--cell-size,10px) * var(--font-scale,1));
+  color:var(--tbl-cell-color,#000);
+  text-align:inherit; /* Inherit from table */
+}
+.paper thead th{font-weight:800;background:var(--tbl-header-bg,#f8fafc);color:var(--tbl-header-color,#000)}
+.paper .group-head th{
+  font-size:calc(var(--group-size,9px) * var(--font-scale,1));height:7mm;
+  background:var(--tbl-header-bg,#f5f5f5);
+  background-image:linear-gradient(rgba(0,0,0,.04),rgba(0,0,0,.04));
+}
+.paper .columns-head th{font-size:calc(var(--head-size,10px) * var(--font-scale,1));height:var(--head-height,8mm)}
+.paper tbody tr:nth-child(even) td{background:var(--tbl-zebra,transparent)}
+
+/* ========== TOASTS ========== */
+.toasts{position:fixed;bottom:20px;right:20px;z-index:9999;display:flex;flex-direction:column;gap:8px;max-width:calc(100vw - 40px)}
+.toast{
+  display:flex;align-items:center;gap:10px;
+  padding:12px 16px;border-radius:10px;
+  background:var(--surface);color:var(--text);
+  box-shadow:var(--shadow-lg);border:1px solid var(--border);
+  font-size:13px;font-weight:700;
+  animation:slideInRight .3s cubic-bezier(.4,0,.2,1);
+  max-width:340px;
+}
+.toast svg{width:18px;height:18px;flex-shrink:0}
+.toast-success{border-color:var(--ok);background:var(--ok-soft);color:var(--ok)}
+.toast-error{border-color:var(--danger);background:var(--danger-soft);color:var(--danger)}
+.toast-info{border-color:var(--primary);background:var(--primary-soft);color:var(--primary-text)}
+
+@keyframes slideInRight{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:translateX(0)}}
+
+/* ========== RESPONSIVE ========== */
+@media(max-width:900px){
+  .mobile-tabs{display:flex}
+  .app-layout{grid-template-columns:1fr}
+  .sidebar{display:none;border-left:0;border-bottom:1px solid var(--border)}
+  .preview{display:none;padding:10px}
+  .app-layout.show-settings .sidebar{display:block}
+  .app-layout.show-preview .preview{display:block}
+  .topbar h1{font-size:14px}
+  .topbar p{font-size:10px}
+  .brand-icon{width:36px;height:36px}
+  .style-grid{grid-template-columns:1fr}
+  .sheets-scroll{padding:0 0 16px}
+  .toasts{right:10px;bottom:10px;max-width:calc(100vw - 20px)}
+}
+@media(max-width:480px){
+  .type-grid{grid-template-columns:1fr 1fr}
+  .type-actions{grid-template-columns:1fr 1fr 1fr}
+  .grid2{grid-template-columns:1fr}
+  .grid3{grid-template-columns:1fr 1fr}
+  .col-row{grid-template-columns:minmax(0,1fr) 40px 40px auto}
+  .dyn-row{grid-template-columns:1fr 1fr}
+}
+
+/* ========== PRINT ========== */
+@media print{
+  @page{margin:0}
+  html,body{background:#fff !important;margin:0 !important;padding:0 !important;height:auto !important;overflow:visible !important;display:block !important}
+  .topbar,.sidebar,.preview-head,.no-print,.toasts,.mobile-tabs{display:none !important}
+  .app,.app-layout,.preview,.sheets-scroll,.sheets{
+    display:block !important;min-height:0 !important;margin:0 !important;
+    padding:0 !important;overflow:visible !important;transform:none !important;
+    background:#fff !important;height:auto !important;
+  }
+  .paper{
+    box-shadow:none !important;margin:0 !important;padding:10mm !important;
+    width:100% !important;min-height:0 !important;height:auto !important;
+    overflow:visible !important;filter:none !important;
+  }
+  .paper.portrait,.paper.landscape{width:100% !important}
+  .paper:last-child{break-after:auto !important;page-break-after:auto !important}
+  *{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important}
+}
+</style>
+</head>
+<body>
+
+<div class="app">
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-icon"><i data-lucide="printer"></i></div>
+      <div>
+        <h1>مركز طباعة كشوف الطلاب</h1>
+        <p>إدارة القوالب الذكية</p>
+      </div>
+    </div>
+    <div class="topbar-actions">
+      <button class="icon-btn" id="themeBtn" title="Theme"><i data-lucide="moon"></i></button>
+    </div>
+  </header>
+
+  <div class="mobile-tabs">
+    <button class="mtab active" data-tab="settings"><i data-lucide="settings"></i><span>الإعدادات</span></button>
+    <button class="mtab" data-tab="preview"><i data-lucide="eye"></i><span>المعاينة</span></button>
+  </div>
+
+  <div class="app-layout show-settings">
+    <aside class="sidebar">
+
+      <details class="section" open>
+        <summary><i data-lucide="folder"></i><span>القوالب</span></summary>
+        <div class="section-body">
+          <div id="typeList" class="type-grid"></div>
+          <div class="type-actions">
+            <button class="btn btn-soft btn-sm" id="addTypeBtn"><i data-lucide="plus"></i><span>نوع جديد</span></button>
+            <button class="btn btn-soft btn-sm" id="renameTypeBtn"><i data-lucide="edit-2"></i><span>تسمية</span></button>
+            <button class="btn btn-danger btn-sm" id="deleteTypeBtn"><i data-lucide="trash-2"></i><span>حذف</span></button>
+          </div>
+          <div style="display:flex;gap:6px;margin:12px 0 8px">
+            <input id="newTplName" placeholder="اسم القالب">
+            <button class="btn btn-primary btn-sm" id="createTplBtn" style="flex-shrink:0"><i data-lucide="plus"></i></button>
+          </div>
+          <div id="tplList" class="template-list"></div>
+          <div class="grid2" style="margin-top:10px">
+            <button class="btn btn-soft btn-sm" id="exportBtn"><i data-lucide="download"></i><span>تصدير</span></button>
+            <button class="btn btn-soft btn-sm" id="importBtn"><i data-lucide="upload"></i><span>استيراد</span></button>
+            <input type="file" id="importFile" accept="application/json" hidden>
+          </div>
+        </div>
+      </details>
+
+      <details class="section">
+        <summary><i data-lucide="heading"></i><span>الهيدر والشعار</span></summary>
+        <div class="section-body">
+          <div class="field"><label>العنوان</label><input id="hMain"></div>
+          <div class="field"><label>الفرعي</label><input id="hSub"></div>
+          <div class="grid2">
+            <div class="field"><label>حجم العنوان</label><input id="hSize" type="number" min="10" max="24"></div>
+            <div class="field"><label>اللون</label><input id="hColor" type="color"></div>
+          </div>
+          <div class="grid2">
+            <div class="field"><label>محاذاة النص</label>
+              <select id="hAlign">
+                <option value="center">وسط</option>
+                <option value="right">يمين</option>
+                <option value="left">يسار</option>
+              </select>
+            </div>
+            <div class="field"><label>اتجاه الورقة</label>
+              <select id="hOrientation">
+                <option value="portrait">طولي A4</option>
+                <option value="landscape">عرضي A4</option>
+              </select>
+            </div>
+          </div>
+          <div class="field">
+            <label>شعار المؤسسة (يظهر في الطباعة إذا مفعّل)</label>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:4px">
+              <label class="btn btn-soft btn-sm" style="cursor:pointer">
+                <i data-lucide="image"></i><span>رفع الشعار</span>
+                <input type="file" id="logoInput" accept="image/*" style="display:none">
+              </label>
+              <button class="btn btn-danger btn-sm" id="clearLogoBtn"><i data-lucide="trash-2"></i></button>
+            </div>
+            <div id="logoPreview" style="margin-top:8px;text-align:center"></div>
+          </div>
+          <div class="grid2">
+            <div class="field"><label>مكان الشعار</label>
+              <select id="hLogoPosition">
+                <option value="center">وسط</option>
+                <option value="right">يمين</option>
+                <option value="left">يسار</option>
+              </select>
+            </div>
+            <div class="field"><label>حجم الشعار (mm)</label><input id="hLogoSize" type="number" min="6" max="40"></div>
+          </div>
+          <div class="field">
+            <div style="display:flex;gap:10px;flex-wrap:wrap;font-size:11px">
+              <label style="display:flex;align-items:center;gap:4px;cursor:pointer"><input type="checkbox" id="hShowLogo"><span>إظهار الشعار</span></label>
+              <label style="display:flex;align-items:center;gap:4px;cursor:pointer"><input type="checkbox" id="hShowSub"><span>الفرعي</span></label>
+              <label style="display:flex;align-items:center;gap:4px;cursor:pointer"><input type="checkbox" id="hShowSeq"><span>رقم الورقة</span></label>
+              <label style="display:flex;align-items:center;gap:4px;cursor:pointer"><input type="checkbox" id="hShowPage"><span>صفحة X/Y</span></label>
+              <label style="display:flex;align-items:center;gap:4px;cursor:pointer"><input type="checkbox" id="hShowRowNum"><span>رقم الصف</span></label>
+            </div>
+          </div>
+          <h3 style="font-size:11px;margin:12px 0 6px;color:var(--text-muted)">حقول الهيدر</h3>
+          <div id="metaList" class="sortable-list"></div>
+          <button class="btn btn-soft btn-sm btn-block" id="addMetaBtn" style="margin-top:6px"><i data-lucide="plus"></i><span>إضافة حقل</span></button>
+        </div>
+      </details>
+
+      <details class="section">
+        <summary><i data-lucide="file-text"></i><span>إعدادات المحتوى</span></summary>
+        <div class="section-body">
+          <div class="field"><label>الفترة</label><input id="cPeriod"></div>
+          <div class="grid2">
+            <div class="field"><label>المتوقع</label><input id="cExpected" type="date"></div>
+            <div class="field"><label>الفعلي</label><input id="cActual" type="date"></div>
+          </div>
+          <div class="range-modes" id="rangeModes">
+            <button type="button" data-range="month" class="active">شهر كامل</button>
+            <button type="button" data-range="range">فترة</button>
+            <button type="button" data-range="days">أيام محددة</button>
+          </div>
+          <div id="rangeMonth">
+            <div class="field"><label>شهر المتابعة</label><input id="cMonth" type="month"></div>
+            <div class="field"><label>أيام الدراسة</label>
+              <div class="days" id="daysMonth">
+                <label><input type="checkbox" value="6" checked> السبت</label>
+                <label><input type="checkbox" value="0" checked> الأحد</label>
+                <label><input type="checkbox" value="1" checked> الإثنين</label>
+                <label><input type="checkbox" value="2" checked> الثلاثاء</label>
+                <label><input type="checkbox" value="3" checked> الأربعاء</label>
+                <label><input type="checkbox" value="4"> الخميس</label>
+                <label><input type="checkbox" value="5"> الجمعة</label>
+              </div>
+              <div class="days-actions">
+                <button type="button" data-days="all" data-target="daysMonth">الكل</button>
+                <button type="button" data-days="none" data-target="daysMonth">لا شيء</button>
+              </div>
+            </div>
+          </div>
+          <div id="rangeRange" hidden>
+            <div class="grid2">
+              <div class="field"><label>من</label><input id="cStart" type="date"></div>
+              <div class="field"><label>إلى</label><input id="cEnd" type="date"></div>
+            </div>
+            <div class="field"><label>أيام الدراسة</label>
+              <div class="days" id="daysRange">
+                <label><input type="checkbox" value="6" checked> السبت</label>
+                <label><input type="checkbox" value="0" checked> الأحد</label>
+                <label><input type="checkbox" value="1" checked> الإثنين</label>
+                <label><input type="checkbox" value="2" checked> الثلاثاء</label>
+                <label><input type="checkbox" value="3" checked> الأربعاء</label>
+                <label><input type="checkbox" value="4"> الخميس</label>
+                <label><input type="checkbox" value="5"> الجمعة</label>
+              </div>
+              <div class="days-actions">
+                <button type="button" data-days="all" data-target="daysRange">الكل</button>
+                <button type="button" data-days="none" data-target="daysRange">لا شيء</button>
+              </div>
+            </div>
+          </div>
+          <div id="rangeDays" hidden>
+            <div class="field"><label>شهر الأساس</label><input id="cMonthDays" type="month"></div>
+            <div class="field"><label>أرقام الأيام</label><input id="cSpecificDays" placeholder="1,5,10"></div>
+          </div>
+          <div class="grid2">
+            <div class="field"><label>الدرس</label><input id="cLesson"></div>
+            <div class="field"><label>المراجعة</label><input id="cRevision"></div>
+          </div>
+          <div class="grid2">
+            <div class="field"><label>الحلقة</label><input id="cCircle"></div>
+            <div class="field"><label>الأستاذ</label><input id="cTeacher"></div>
+          </div>
+          <div class="field"><label>الطلاب (سطر لكل طالب)</label><textarea id="cStudents" rows="4"></textarea></div>
+        </div>
+      </details>
+
+      <details class="section">
+        <summary><i data-lucide="palette"></i><span>تنسيقات الجدول (Styles)</span></summary>
+        <div class="section-body">
+          
+          <div class="field" style="background:var(--primary-soft);padding:10px;border-radius:8px;margin-bottom:12px">
+            <label style="color:var(--primary-text)">أنماط جاهزة (Presets)</label>
+            <select id="tsPreset" style="border-color:var(--primary)">
+              <option value="custom">-- مخصص --</option>
+              <option value="classic">كلاسيكي</option>
+              <option value="modern">حديث (أزرق)</option>
+              <option value="minimal">بسيط بدون حدود</option>
+              <option value="colorful">ملون</option>
+              <option value="striped">مخطط (Zebra)</option>
+            </select>
+          </div>
+
+          <div class="style-grid">
+            <div class="style-item"><label>محاذاة الجدول</label>
+              <select id="tsAlign">
+                <option value="center">وسط</option>
+                <option value="right">يمين</option>
+                <option value="left">يسار</option>
+              </select>
+            </div>
+            <div class="style-item"><label>نوع الخط</label>
+              <select id="tsFont">
+                <option value="Tahoma, sans-serif">Tahoma</option>
+                <option value="'Cairo', sans-serif">Cairo</option>
+                <option value="Arial, sans-serif">Arial</option>
+                <option value="'Times New Roman', serif">Times</option>
+              </select>
+            </div>
+            <div class="style-item"><label>لون الحدود</label><input type="color" id="tsBorderColor" value="#111111"></div>
+            <div class="style-item"><label>سماكة الحدود</label><input type="number" id="tsBorderWidth" min="0" max="4" step="0.5" value="1"></div>
+            <div class="style-item"><label>نمط الحدود</label>
+              <select id="tsBorderStyle">
+                <option value="solid">صلب</option>
+                <option value="dashed">متقطع</option>
+                <option value="dotted">منقط</option>
+                <option value="none">بدون</option>
+              </select>
+            </div>
+            <div class="style-item"><label>الحشوة</label>
+              <select id="tsPadding">
+                <option value="1">ضيقة</option>
+                <option value="3">عادية</option>
+                <option value="5">واسعة</option>
+              </select>
+            </div>
+            <div class="style-item"><label>خلفية الرأس</label><input type="color" id="tsHeaderBg" value="#f8fafc"></div>
+            <div class="style-item"><label>نص الرأس</label><input type="color" id="tsHeaderColor" value="#000000"></div>
+            <div class="style-item"><label>نص الخلايا</label><input type="color" id="tsCellColor" value="#000000"></div>
+            <div class="zebra-item">
+              <label><input type="checkbox" id="tsZebra"><span>تظليل الصفوف (Zebra)</span></label>
+              <input type="color" id="tsZebraColor" value="#f1f5f9">
+            </div>
+          </div>
+          
+          <div class="field" style="margin-top:12px">
+            <div class="font-scale-value">
+              <span>تكبير الخط العام</span>
+              <strong id="fontScaleVal">1.00x</strong>
+            </div>
+            <input type="range" id="fontScale" min="0.6" max="2" step="0.05" value="1">
+          </div>
+          <div class="grid2">
+            <div class="field"><label>حجم خط الخلايا</label><input type="number" id="cellSize" min="6" max="20" value="10"></div>
+            <div class="field"><label>حجم خط الرأس</label><input type="number" id="headSize" min="6" max="20" value="10"></div>
+          </div>
+          <div class="field"><label>ارتفاع الرأس (mm)</label><input type="number" id="headHeight" min="4" max="20" step="0.5" value="8"></div>
+        </div>
+      </details>
+
+      <details class="section">
+        <summary><i data-lucide="columns"></i><span>الأعمدة والارتفاعات</span></summary>
+        <div class="section-body">
+          <div class="grid2">
+            <div class="field"><label>عدد الصفوف</label><input type="number" id="cRows" min="1" max="45" value="30"></div>
+            <div class="field"><label>ارتفاع الصف</label>
+              <div style="display:flex;gap:4px">
+                <input type="number" id="cRowHeight" min="2" max="30" step="0.5" value="7">
+                <button class="btn btn-primary btn-sm" id="applyHeightBtn" style="padding:0 10px"><i data-lucide="check"></i></button>
+              </div>
+            </div>
+          </div>
+          <button class="btn btn-soft btn-sm btn-block" id="autoFitBtn"><i data-lucide="zap"></i><span>ملء تلقائي للصفحة</span></button>
+          <div id="colList" class="sortable-list" style="margin-top:8px"></div>
+          <button class="btn btn-soft btn-sm btn-block" id="addColBtn" style="margin-top:6px"><i data-lucide="plus"></i><span>إضافة عمود</span></button>
+          <button class="btn btn-soft btn-sm btn-block" id="resetColsBtn" style="margin-top:4px"><i data-lucide="rotate-ccw"></i><span>استعادة الأعمدة الافتراضية</span></button>
+        </div>
+      </details>
+
+      <details class="section" open>
+        <summary><i data-lucide="printer"></i><span>الطباعة</span></summary>
+        <div class="section-body">
+          <div class="field"><label>النسخ لكل طالب</label><input type="number" id="cCopies" min="1" max="10" value="1"></div>
+          <button class="btn btn-primary btn-block" id="buildBtn" style="margin-bottom:6px"><i data-lucide="refresh-cw"></i><span>تحديث المعاينة</span></button>
+          <button class="btn btn-soft btn-block" id="printBtn" style="margin-bottom:6px"><i data-lucide="printer"></i><span>طباعة / PDF</span></button>
+          <button class="btn btn-danger btn-block" id="clearBtn"><i data-lucide="trash-2"></i><span>مسح المعاينة</span></button>
+        </div>
+      </details>
+
+    </aside>
+
+    <main class="preview">
+      <div class="preview-head">
+        <div>
+          <strong>المعاينة</strong><br>
+          <span id="sheetCount"></span>
+        </div>
+      </div>
+      <div class="sheets-scroll">
+        <div id="sheets" class="sheets">
+          <div class="blank">
+            <i data-lucide="file-text"></i>
+            <span>جاري التحميل...</span>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<div id="toasts" class="toasts"></div>
+
+<script>
+'use strict';
+
+// ============ HELPERS ============
+const $ = id => document.getElementById(id);
+const escapeHtml = v => String(v ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const uid = () => Math.random().toString(36).slice(2, 9);
+const debounce = (fn, ms = 300) => {
+  let timer;
+  return (...args) => { clearTimeout(timer); timer = setTimeout(() => fn(...args), ms); };
+};
+function refreshIcons() { try { if (window.lucide) lucide.createIcons(); } catch {} }
+
+function toast(msg, type = 'info') {
+  const icons = { success: 'check-circle-2', error: 'x-circle', info: 'info' };
+  const el = document.createElement('div');
+  el.className = `toast toast-${type}`;
+  el.innerHTML = `<i data-lucide="${icons[type] || 'info'}"></i><span>${escapeHtml(msg)}</span>`;
+  $('toasts').appendChild(el);
+  refreshIcons();
+  setTimeout(() => el.remove(), 3000);
+}
+
+// ============ STORAGE KEYS ============
+const KEYS = {
+  templates: 'printApp_templates_v2',
+  theme: 'printApp_theme_v2'
+};
+
+// ============ SETTINGS (LOGO) ============
+const Settings = {
+  get() { try { return JSON.parse(localStorage.getItem('printApp_settings_v2') || '{}'); } catch { return {}; } },
+  set(patch) { try { localStorage.setItem('printApp_settings_v2', JSON.stringify({ ...this.get(), ...patch })); } catch (e) { toast('Storage full', 'error'); } },
+  logo() { return this.get().logoUrl || null; }
+};
+
+// ============ PRESETS ============
+const PRESETS = {
+  classic: {
+    borderColor: '#111111', borderWidth: 1, borderStyle: 'solid', padding: 3,
+    headerBg: '#f8fafc', headerColor: '#000000', cellColor: '#000000',
+    font: 'Tahoma, sans-serif', zebra: false, zebraColor: '#f1f5f9', align: 'center'
+  },
+  modern: {
+    borderColor: '#2d5ee8', borderWidth: 1, borderStyle: 'solid', padding: 4,
+    headerBg: '#2d5ee8', headerColor: '#ffffff', cellColor: '#1e293b',
+    font: "'Cairo', sans-serif", zebra: true, zebraColor: '#f0f4ff', align: 'center'
+  },
+  minimal: {
+    borderColor: '#cbd5e1', borderWidth: 1, borderStyle: 'solid', padding: 6,
+    headerBg: 'transparent', headerColor: '#000000', cellColor: '#333333',
+    font: 'Arial, sans-serif', zebra: false, zebraColor: '#f8fafc', align: 'right'
+  },
+  colorful: {
+    borderColor: '#d97706', borderWidth: 1.5, borderStyle: 'dashed', padding: 4,
+    headerBg: '#fef3c7', headerColor: '#92400e', cellColor: '#000000',
+    font: "'Cairo', sans-serif", zebra: false, zebraColor: 'transparent', align: 'center'
+  },
+  striped: {
+    borderColor: '#111111', borderWidth: 1, borderStyle: 'solid', padding: 3,
+    headerBg: '#f1f5f9', headerColor: '#0f172a', cellColor: '#0f172a',
+    font: 'Tahoma, sans-serif', zebra: true, zebraColor: '#e2e8f0', align: 'center'
+  }
+};
+
+// ============ DEFAULT TEMPLATE ============
+const DEFAULT_META = [
+  { id: 'f1', label: 'اسم الطالب', value: 'student_name', width: 'half' },
+  { id: 'f2', label: 'الأستاذ', value: 'teacher', width: 'half' },
+  { id: 'f3', label: 'الحلقة', value: 'circle', width: 'half' },
+  { id: 'f4', label: 'الفترة', value: 'period', width: 'half' }
+];
+const BASE_TEMPLATES = {
+  taahado: { columns: [
+    { id: uid(), label: 'التاريخ', width: 9, height: 7 },
+    { id: uid(), label: 'اليوم', width: 9, height: 7 },
+    { id: uid(), label: 'من - إلى', width: 20, height: 7, group: 'الورد' },
+    { id: uid(), label: 'المرجع', width: 8, height: 7, group: 'الورد' },
+    { id: uid(), label: 'الفهم', width: 8, height: 7, group: 'الورد' },
+    { id: uid(), label: 'تردد', width: 8, height: 7, group: 'الورد' },
+    { id: uid(), label: 'التقدير', width: 10, height: 7 },
+    { id: uid(), label: 'ملاحظات', width: 28, height: 7 }
+  ]},
+  monthly: { columns: [
+    { id: uid(), label: 'التاريخ', width: 5, height: 7, field: 'date' },
+    { id: uid(), label: 'اليوم', width: 9, height: 7, field: 'weekday' },
+    { id: uid(), label: 'السورة', width: 10, height: 7, group: 'الحفظ' },
+    { id: uid(), label: 'من', width: 7, height: 7, group: 'الحفظ' },
+    { id: uid(), label: 'إلى', width: 7, height: 7, group: 'الحفظ' },
+    { id: uid(), label: 'التقدير', width: 7, height: 7 },
+    { id: uid(), label: 'ملاحظات', width: 24, height: 7 }
+  ]}
+};
+
+function buildDefaultConfig(typeId, name) {
+  const base = BASE_TEMPLATES[typeId] || BASE_TEMPLATES.taahado;
+  return {
+    columns: JSON.parse(JSON.stringify(base.columns)),
+    metaFields: JSON.parse(JSON.stringify(DEFAULT_META)),
+    rows: 30,
+    orientation: typeId === 'monthly' ? 'landscape' : 'portrait',
+    layout: { rowHeight: 7, headHeight: 8, cellSize: 10, headSize: 10, fontScale: 1 },
+    header: {
+      main: name, sub: '', size: 16, color: '#000000', align: 'center',
+      showLogo: true, showSub: true, showSeq: false, showPage: false, showRowNum: false,
+      logoPosition: 'center', logoSize: 14
+    },
+    tableStyle: { ...PRESETS.classic },
+    content: {
+      period: '', expected: '', actual: '', lesson: '', revision: '',
+      circle: '', teacher: '', students: '', copies: 1,
+      rangeMode: 'month', month: '', monthDays: '', startDate: '', endDate: '',
+      specificDays: '', studyDays: [6, 0, 1, 2, 3]
+    }
+  };
+}
+
+// ترحيل وحماية القوالب القديمة
+function sanitizeConfig(cfg, typeId, name) {
+  const base = buildDefaultConfig(typeId, name);
+  if (!cfg) return base;
+  const out = { ...base, ...cfg };
+
+  if (Array.isArray(out.columns)) {
+    out.columns = out.columns.map(c => ({
+      ...c, id: c.id || uid(), width: Number(c.width) || 10, height: parseFloat(c.height) || 7
+    }));
+  } else out.columns = JSON.parse(JSON.stringify(base.columns));
+
+  if (Array.isArray(out.metaFields)) {
+    out.metaFields = out.metaFields.map(m => ({ ...m, id: m.id || uid() }));
+  } else out.metaFields = JSON.parse(JSON.stringify(base.metaFields));
+
+  out.layout = {
+    rowHeight: parseFloat(out.layout?.rowHeight) || 7,
+    headHeight: parseFloat(out.layout?.headHeight) || 8,
+    cellSize: parseFloat(out.layout?.cellSize) || 10,
+    headSize: parseFloat(out.layout?.headSize) || 10,
+    fontScale: parseFloat(out.layout?.fontScale) || 1
+  };
+
+  out.content = { ...base.content, ...(out.content || {}) };
+
+  out.header = {
+    ...base.header, ...(out.header || {}),
+    size: parseInt(out.header?.size) || 16, logoSize: parseInt(out.header?.logoSize) || 14
+  };
+
+  out.tableStyle = {
+    ...base.tableStyle, ...(out.tableStyle || {}),
+    borderWidth: parseFloat(out.tableStyle?.borderWidth) ?? 1,
+    padding: parseInt(out.tableStyle?.padding) ?? 3
+  };
+
+  return out;
+}
+
+const Store = {
+  types: [{ id: 'taahado', name: 'تعاهدوا' }, { id: 'monthly', name: 'الحفظ الشهري' }],
+  templates: {},
+  currentTypeId: 'taahado',
+  activeTemplateName: 'default',
+  init() {
+    try {
+      const stored = JSON.parse(localStorage.getItem(KEYS.templates) || 'null');
+      if (stored && stored.types && stored.templates) {
+        this.types = stored.types;
+        this.templates = stored.templates;
+        this.currentTypeId = stored.currentTypeId || this.types[0].id;
+        this.activeTemplateName = stored.activeTemplateName;
+      }
+    } catch {}
+    this.types.forEach(t => {
+      if (!this.templates[t.id]) this.templates[t.id] = {};
+      if (!Object.keys(this.templates[t.id]).length) {
+        this.templates[t.id]['default'] = buildDefaultConfig(t.id, t.name);
+      } else {
+        for (let name in this.templates[t.id]) {
+          this.templates[t.id][name] = sanitizeConfig(this.templates[t.id][name], t.id, name);
+        }
+      }
+    });
+    if (!this.templates[this.currentTypeId]) this.currentTypeId = this.types[0].id;
+    if (!this.templates[this.currentTypeId][this.activeTemplateName]) {
+      this.activeTemplateName = Object.keys(this.templates[this.currentTypeId])[0];
+    }
+  },
+  save() {
+    try {
+      localStorage.setItem(KEYS.templates, JSON.stringify({
+        types: this.types, templates: this.templates,
+        currentTypeId: this.currentTypeId, activeTemplateName: this.activeTemplateName
+      }));
+    } catch (e) { toast('Storage full', 'error'); }
+  },
+  current() { return this.templates[this.currentTypeId]?.[this.activeTemplateName]; },
+  update(cfg) {
+    if (!this.templates[this.currentTypeId]) this.templates[this.currentTypeId] = {};
+    this.templates[this.currentTypeId][this.activeTemplateName] = cfg;
+    this.save();
+  }
+};
+
+// ============ DATE UTILS ============
+function parseLocalDate(str) {
+  if (!str) return new Date(NaN);
+  const [y, m, d] = str.split('-').map(Number);
+  return (!y || !m || !d) ? new Date(NaN) : new Date(y, m - 1, d);
+}
+function weekdayName(d) {
+  try { return new Intl.DateTimeFormat('ar', { weekday: 'long' }).format(d); }
+  catch { return ['الأحد','الإثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'][d.getDay()]; }
+}
+function buildDateList(cfg) {
+  const c = cfg.content;
+  const days = c.studyDays || [];
+  const out = [];
+  if (c.rangeMode === 'month') {
+    if (!/^\d{4}-\d{2}$/.test(c.month)) return out;
+    const [y, m] = c.month.split('-').map(Number);
+    const total = new Date(y, m, 0).getDate();
+    for (let d = 1; d <= total; d++) {
+      const dt = new Date(y, m - 1, d);
+      if (days.includes(dt.getDay())) out.push({ day: d, weekday: weekdayName(dt) });
+    }
+    return out;
+  }
+  if (c.rangeMode === 'range') {
+    const sd = parseLocalDate(c.startDate), ed = parseLocalDate(c.endDate);
+    if (isNaN(sd) || isNaN(ed) || sd > ed) return out;
+    const cur = new Date(sd); let g = 0;
+    while (cur <= ed && g++ < 500) {
+      if (days.includes(cur.getDay())) out.push({ day: cur.getDate(), weekday: weekdayName(cur) });
+      cur.setDate(cur.getDate() + 1);
+    }
+    return out;
+  }
+  if (!/^\d{4}-\d{2}$/.test(c.monthDays)) return out;
+  const [y, m] = c.monthDays.split('-').map(Number);
+  const nums = String(c.specificDays || '').split(/[,\s]+/).map(x => parseInt(x, 10)).filter(n => !isNaN(n) && n >= 1 && n <= 31);
+  const uniq = Array.from(new Set(nums)).sort((a, b) => a - b);
+  for (const d of uniq) {
+    const dt = new Date(y, m - 1, d);
+    if (dt.getMonth() === m - 1) out.push({ day: d, weekday: weekdayName(dt) });
+  }
+  return out;
+}
+
+// ============ CAPTURE / APPLY CONFIG ============
+let _applying = false;
+function readCheckboxes(containerId) {
+  return Array.from(document.querySelectorAll(`#${containerId} input[type=checkbox]:checked`)).map(c => Number(c.value));
+}
+function captureConfig() {
+  const cfg = Store.current() || buildDefaultConfig(Store.currentTypeId, 'Default');
+  cfg.orientation = $('hOrientation').value;
+  cfg.rows = parseInt($('cRows').value, 10) || 30;
+  cfg.layout = {
+    rowHeight: parseFloat($('cRowHeight').value) || 7,
+    headHeight: parseFloat($('headHeight').value) || 8,
+    cellSize: parseFloat($('cellSize').value) || 10,
+    headSize: parseFloat($('headSize').value) || 10,
+    fontScale: parseFloat($('fontScale').value) || 1
+  };
+  cfg.header = {
+    main: $('hMain').value, sub: $('hSub').value,
+    size: parseInt($('hSize').value, 10) || 16, color: $('hColor').value,
+    align: $('hAlign').value,
+    showLogo: $('hShowLogo').checked, showSub: $('hShowSub').checked,
+    showSeq: $('hShowSeq').checked, showPage: $('hShowPage').checked,
+    showRowNum: $('hShowRowNum').checked,
+    logoPosition: $('hLogoPosition').value,
+    logoSize: parseInt($('hLogoSize').value, 10) || 14
+  };
+  cfg.tableStyle = {
+    align: $('tsAlign').value,
+    borderColor: $('tsBorderColor').value,
+    borderWidth: parseFloat($('tsBorderWidth').value) || 0,
+    borderStyle: $('tsBorderStyle').value,
+    padding: parseInt($('tsPadding').value, 10) || 3,
+    headerBg: $('tsHeaderBg').value,
+    headerColor: $('tsHeaderColor').value,
+    cellColor: $('tsCellColor').value,
+    font: $('tsFont').value,
+    zebra: $('tsZebra').checked,
+    zebraColor: $('tsZebraColor').value
+  };
+  const rangeMode = document.querySelector('.range-modes button.active')?.dataset.range || 'month';
+  cfg.content = {
+    period: $('cPeriod').value, expected: $('cExpected').value, actual: $('cActual').value,
+    lesson: $('cLesson').value, revision: $('cRevision').value,
+    circle: $('cCircle').value, teacher: $('cTeacher').value, students: $('cStudents').value,
+    copies: parseInt($('cCopies').value, 10) || 1, rangeMode,
+    month: $('cMonth').value, monthDays: $('cMonthDays').value,
+    startDate: $('cStart').value, endDate: $('cEnd').value, specificDays: $('cSpecificDays').value,
+    studyDays: rangeMode === 'month' ? readCheckboxes('daysMonth') : rangeMode === 'range' ? readCheckboxes('daysRange') : []
+  };
+  Store.update(cfg);
+  return cfg;
+}
+
+function applyConfig(cfg) {
+  _applying = true;
+  try {
+    if (!cfg) return;
+    $('hOrientation').value = cfg.orientation || 'portrait';
+    $('cRows').value = cfg.rows || 30;
+    const L = cfg.layout || {};
+    $('cRowHeight').value = L.rowHeight ?? 7;
+    $('headHeight').value = L.headHeight ?? 8;
+    $('cellSize').value = L.cellSize ?? 10;
+    $('headSize').value = L.headSize ?? 10;
+    $('fontScale').value = L.fontScale ?? 1;
+    $('fontScaleVal').textContent = (L.fontScale ?? 1).toFixed(2) + 'x';
+
+    const H = cfg.header || {};
+    $('hMain').value = H.main || ''; $('hSub').value = H.sub || '';
+    $('hSize').value = H.size ?? 16; $('hColor').value = H.color || '#000000';
+    $('hAlign').value = H.align || 'center';
+    $('hShowLogo').checked = !!H.showLogo; $('hShowSub').checked = !!H.showSub;
+    $('hShowSeq').checked = !!H.showSeq; $('hShowPage').checked = !!H.showPage;
+    $('hShowRowNum').checked = !!H.showRowNum;
+    $('hLogoPosition').value = H.logoPosition || 'center';
+    $('hLogoSize').value = H.logoSize ?? 14;
+
+    const TS = cfg.tableStyle || PRESETS.classic;
+    $('tsAlign').value = TS.align || 'center';
+    $('tsBorderColor').value = TS.borderColor || '#111111';
+    $('tsBorderWidth').value = TS.borderWidth ?? 1;
+    $('tsBorderStyle').value = TS.borderStyle || 'solid';
+    $('tsHeaderBg').value = TS.headerBg || '#f8fafc';
+    $('tsHeaderColor').value = TS.headerColor || '#000000';
+    $('tsCellColor').value = TS.cellColor || '#000000';
+    $('tsPadding').value = TS.padding ?? 3;
+    $('tsFont').value = TS.font || 'Tahoma, sans-serif';
+    $('tsZebra').checked = !!TS.zebra;
+    $('tsZebraColor').value = TS.zebraColor || '#f1f5f9';
+    
+    // Check if matches a preset
+    let matchedPreset = 'custom';
+    for (const [k, v] of Object.entries(PRESETS)) {
+      if (TS.align === v.align && TS.borderColor === v.borderColor && TS.headerBg === v.headerBg && TS.zebra === v.zebra) {
+        matchedPreset = k; break;
+      }
+    }
+    $('tsPreset').value = matchedPreset;
+
+    const C = cfg.content || {};
+    $('cPeriod').value = C.period || ''; $('cExpected').value = C.expected || '';
+    $('cActual').value = C.actual || ''; $('cLesson').value = C.lesson || '';
+    $('cRevision').value = C.revision || ''; $('cCircle').value = C.circle || '';
+    $('cTeacher').value = C.teacher || ''; $('cStudents').value = C.students || '';
+    $('cCopies').value = C.copies ?? 1; $('cMonth').value = C.month || '';
+    $('cMonthDays').value = C.monthDays || ''; $('cStart').value = C.startDate || '';
+    $('cEnd').value = C.endDate || ''; $('cSpecificDays').value = C.specificDays || '';
+
+    setRangeMode(C.rangeMode || 'month', true);
+    const study = C.studyDays || [];
+    document.querySelectorAll('#daysMonth input, #daysRange input').forEach(cb => {
+      cb.checked = study.includes(Number(cb.value));
+    });
+
+    renderColumns(cfg.columns || []);
+    renderMeta(cfg.metaFields || []);
+  } finally {
+    _applying = false;
+  }
+}
+
+// ============ RENDER COLUMNS ============
+let colSortable = null;
+function renderColumns(cols) {
+  const el = $('colList');
+  el.innerHTML = cols.map((c, i) => `
+    <div class="sortable-row" data-idx="${i}">
+      <button class="drag-handle" type="button"><i data-lucide="grip-vertical"></i></button>
+      <div class="sortable-row-content">
+        <div class="col-row">
+          <input class="col-label" value="${escapeHtml(c.label)}" placeholder="الاسم">
+          <input type="number" class="col-width" value="${c.width}" min="2" max="80" title="العرض">
+          <input type="number" class="col-height" value="${c.height}" min="2" max="30" step="0.5" title="الارتفاع">
+          <button class="arrow-btn" data-act="remove" style="background:var(--danger-soft);color:var(--danger);width:24px;height:24px"><i data-lucide="x"></i></button>
+          <div class="second-row">
+            <input class="col-group" value="${escapeHtml(c.group || '')}" placeholder="المجموعة">
+            <select class="col-field">
+              <option value=""${!c.field ? ' selected' : ''}>نص</option>
+              <option value="date"${c.field === 'date' ? ' selected' : ''}>تاريخ</option>
+              <option value="weekday"${c.field === 'weekday' ? ' selected' : ''}>يوم</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="arrows">
+        <button class="arrow-btn" data-act="up" ${i === 0 ? 'disabled' : ''}><i data-lucide="chevron-up"></i></button>
+        <button class="arrow-btn" data-act="down" ${i === cols.length - 1 ? 'disabled' : ''}><i data-lucide="chevron-down"></i></button>
+      </div>
+    </div>
+  `).join('');
+  refreshIcons();
+
+  if (colSortable) colSortable.destroy();
+  colSortable = new Sortable(el, {
+    handle: '.drag-handle', animation: 150, ghostClass: 'dragging',
+    onEnd: (e) => {
+      const cfg = Store.current(); if (!cfg) return;
+      const [moved] = cfg.columns.splice(e.oldIndex, 1);
+      cfg.columns.splice(e.newIndex, 0, moved);
+      Store.update(cfg); renderColumns(cfg.columns); schedulePreview();
+    }
+  });
+
+  el.querySelectorAll('.sortable-row').forEach(row => {
+    const i = +row.dataset.idx;
+    row.querySelectorAll('input, select').forEach(inp => {
+      inp.addEventListener('input', () => {
+        const cfg = Store.current(); if (!cfg) return;
+        const col = cfg.columns[i];
+        if (inp.classList.contains('col-label')) col.label = inp.value;
+        else if (inp.classList.contains('col-width')) col.width = Math.max(2, Math.min(80, +inp.value || 2));
+        else if (inp.classList.contains('col-height')) col.height = Math.max(2, Math.min(30, parseFloat(inp.value) || 7));
+        else if (inp.classList.contains('col-group')) col.group = inp.value || undefined;
+        else if (inp.classList.contains('col-field')) col.field = inp.value || undefined;
+        Store.update(cfg); schedulePreview();
+      });
+    });
+    row.querySelectorAll('[data-act]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const cfg = Store.current(); if (!cfg) return;
+        const act = btn.dataset.act;
+        if (act === 'up' && i > 0) [cfg.columns[i - 1], cfg.columns[i]] = [cfg.columns[i], cfg.columns[i - 1]];
+        else if (act === 'down' && i < cfg.columns.length - 1) [cfg.columns[i + 1], cfg.columns[i]] = [cfg.columns[i], cfg.columns[i + 1]];
+        else if (act === 'remove') { if (cfg.columns.length <= 1) return; cfg.columns.splice(i, 1); }
+        Store.update(cfg); renderColumns(cfg.columns); schedulePreview();
+      });
+    });
+  });
+}
+
+// ============ RENDER META ============
+let metaSortable = null;
+function renderMeta(meta) {
+  const el = $('metaList');
+  const opts = [
+    ['blank', 'فراغ'], ['student_name', 'اسم الطالب'], ['teacher', 'الأستاذ'],
+    ['circle', 'الحلقة'], ['period', 'الفترة'], ['lesson', 'الدرس'],
+    ['revision', 'المراجعة'], ['expected', 'المتوقع'], ['actual', 'الفعلي']
+  ];
+  el.innerHTML = meta.map((m, i) => `
+    <div class="sortable-row" data-idx="${i}">
+      <button class="drag-handle" type="button"><i data-lucide="grip-vertical"></i></button>
+      <div class="sortable-row-content">
+        <div class="dyn-row">
+          <input class="dyn-label" value="${escapeHtml(m.label)}" placeholder="الحقل">
+          <select class="dyn-width">
+            <option value="half"${m.width === 'half' ? ' selected' : ''}>نصف</option>
+            <option value="full"${m.width === 'full' ? ' selected' : ''}>كامل</option>
+          </select>
+          <select class="dyn-value">
+            ${opts.map(([v, l]) => `<option value="${v}"${m.value === v ? ' selected' : ''}>${l}</option>`).join('')}
+          </select>
+        </div>
+      </div>
+      <div class="arrows">
+        <button class="arrow-btn" data-act="up" ${i === 0 ? 'disabled' : ''}><i data-lucide="chevron-up"></i></button>
+        <button class="arrow-btn" data-act="down" ${i === meta.length - 1 ? 'disabled' : ''}><i data-lucide="chevron-down"></i></button>
+        <button class="arrow-btn" data-act="remove" style="background:var(--danger-soft);color:var(--danger)"><i data-lucide="x"></i></button>
+      </div>
+    </div>
+  `).join('');
+  refreshIcons();
+
+  if (metaSortable) metaSortable.destroy();
+  metaSortable = new Sortable(el, {
+    handle: '.drag-handle', animation: 150, ghostClass: 'dragging',
+    onEnd: (e) => {
+      const cfg = Store.current(); if (!cfg) return;
+      const [moved] = cfg.metaFields.splice(e.oldIndex, 1);
+      cfg.metaFields.splice(e.newIndex, 0, moved);
+      Store.update(cfg); renderMeta(cfg.metaFields); schedulePreview();
+    }
+  });
+
+  el.querySelectorAll('.sortable-row').forEach(row => {
+    const i = +row.dataset.idx;
+    row.querySelectorAll('input, select').forEach(inp => {
+      inp.addEventListener('input', () => {
+        const cfg = Store.current(); if (!cfg) return;
+        const f = cfg.metaFields[i];
+        if (inp.classList.contains('dyn-label')) f.label = inp.value;
+        else if (inp.classList.contains('dyn-width')) f.width = inp.value;
+        else if (inp.classList.contains('dyn-value')) f.value = inp.value;
+        Store.update(cfg); schedulePreview();
+      });
+    });
+    row.querySelectorAll('[data-act]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const cfg = Store.current(); if (!cfg) return;
+        const act = btn.dataset.act;
+        if (act === 'up' && i > 0) [cfg.metaFields[i - 1], cfg.metaFields[i]] = [cfg.metaFields[i], cfg.metaFields[i - 1]];
+        else if (act === 'down' && i < cfg.metaFields.length - 1) [cfg.metaFields[i + 1], cfg.metaFields[i]] = [cfg.metaFields[i], cfg.metaFields[i + 1]];
+        else if (act === 'remove') cfg.metaFields.splice(i, 1);
+        Store.update(cfg); renderMeta(cfg.metaFields); schedulePreview();
+      });
+    });
+  });
+}
+
+// ============ PREVIEW ============
+let previewTimer;
+function schedulePreview() {
+  if (_applying) return;
+  clearTimeout(previewTimer);
+  previewTimer = setTimeout(() => { buildPreview(); applyMobileScale(); }, 250);
+}
+
+function buildPreview() {
+  const cfg = Store.current();
+  if (!cfg) return;
+  const sc = $('sheets');
+  const logo = Settings.logo();
+  const content = cfg.content || {};
+  const students = (content.students || '').split('\n').map(s => s.trim()).filter(Boolean);
+  const copies = Math.max(1, parseInt(content.copies, 10) || 1);
+  const list = students.length ? students.flatMap(n => Array.from({ length: copies }, () => n)) : Array.from({ length: copies }, () => '');
+  const total = list.length;
+  const hasDate = (cfg.columns || []).some(c => c.field === 'date' || c.field === 'weekday');
+  const dates = hasDate ? buildDateList(cfg) : [];
+
+  const vars = buildStyleVars(cfg);
+  let html = '';
+  
+  list.forEach((student, idx) => {
+    const rows = hasDate && dates.length ? dates : Array.from({ length: cfg.rows || 30 }, (_, i) => ({ day: i + 1, weekday: '' }));
+    const tableHead = buildTableHead(cfg);
+    const body = rows.map((r, ri) => `
+      <tr>
+        ${cfg.header.showRowNum ? `<td class="seq-col">${ri + 1}</td>` : ''}
+        ${cfg.columns.map(c => {
+          let cell = '';
+          if (c.field === 'date') cell = r.day;
+          else if (c.field === 'weekday') cell = r.weekday || '';
+          return `<td style="height:${c.height}mm">${cell}</td>`;
+        }).join('')}
+      </tr>
+    `).join('');
+    
+    const logoStyle = cfg.header.logoPosition === 'right' ? 'margin-left:auto;margin-right:0'
+      : cfg.header.logoPosition === 'left' ? 'margin-right:auto;margin-left:0'
+      : 'margin:0 auto';
+    const logoHtml = cfg.header.showLogo && logo
+      ? `<img src="${logo}" class="logo" style="${logoStyle};max-height:${cfg.header.logoSize || 14}mm">` : '';
+
+    html += `
+      <section class="paper ${cfg.orientation}" style="${vars}">
+        ${cfg.header.showSeq ? `<div class="seq">#${idx + 1}</div>` : ''}
+        <div class="header-block">
+          ${logoHtml}
+          <h3 style="color:${cfg.header.color}">${escapeHtml(cfg.header.main)}</h3>
+          ${cfg.header.showSub && cfg.header.sub ? `<div class="subheader">${escapeHtml(cfg.header.sub)}</div>` : ''}
+        </div>
+        <div class="meta-flex">
+          ${cfg.metaFields.map(f => {
+            let val = '<span class="dotted">&nbsp;</span>';
+            if (f.value === 'student_name') val = student ? escapeHtml(student) : val;
+            else if (f.value !== 'blank') {
+              const v = content[f.value] || '';
+              val = `<span class="dotted">${escapeHtml(v)}</span>`;
+            }
+            return `<div class="meta-item ${f.width}"><strong>${escapeHtml(f.label)}:</strong> ${val}</div>`;
+          }).join('')}
+        </div>
+        <table>
+          ${tableHead}
+          <tbody>${body}</tbody>
+        </table>
+        ${cfg.header.showPage ? `<div class="pagefoot">صفحة ${idx + 1} / ${total}</div>` : ''}
+      </section>
+    `;
+  });
+
+  if (!html) html = `<div class="blank"><i data-lucide="file-text"></i><span>لا يوجد محتوى</span></div>`;
+  sc.innerHTML = html;
+  refreshIcons();
+
+  const sheetCount = $('sheetCount');
+  if (sheetCount) {
+    sheetCount.textContent = `أوراق: ${total}${students.length ? ' — ' + students.length + ' طالب' : ''}`;
+    setTimeout(() => {
+      const first = sc.querySelector('.paper');
+      if (first && first.offsetHeight / (96 / 25.4) > 299) sheetCount.textContent += ' ⚠ يتجاوز A4';
+    }, 50);
+  }
+}
+
+function buildStyleVars(cfg) {
+  const TS = cfg.tableStyle;
+  const L = cfg.layout;
+  return `
+    --header-align:${cfg.header.align};
+    --tbl-align:${TS.align};
+    --tbl-border-color:${TS.borderColor};
+    --tbl-border-width:${TS.borderWidth}px;
+    --tbl-border-style:${TS.borderStyle};
+    --tbl-header-bg:${TS.headerBg};
+    --tbl-header-color:${TS.headerColor};
+    --tbl-cell-color:${TS.cellColor};
+    --tbl-padding:${TS.padding}px;
+    --tbl-font:${TS.font};
+    --tbl-zebra:${TS.zebra ? TS.zebraColor : 'transparent'};
+    --cell-size:${L.cellSize}px;
+    --head-size:${L.headSize}px;
+    --group-size:${Math.max(7, L.headSize - 1)}px;
+    --head-height:${L.headHeight}mm;
+    --header-size:${cfg.header.size}px;
+    --header-color:${cfg.header.color};
+    --font-scale:${L.fontScale};
+  `.trim();
+}
+
+function buildTableHead(cfg) {
+  const cols = cfg.columns;
+  const showRowNum = cfg.header.showRowNum;
+  const hasGroups = cols.some(c => c.group);
+  const totalW = cols.reduce((s, c) => s + (c.width || 1), 0) || 1;
+  const widths = cols.map(c => (c.width / totalW) * (showRowNum ? 96 : 100));
+
+  let cg = '<colgroup>';
+  if (showRowNum) cg += '<col style="width:4%">';
+  widths.forEach(w => { cg += `<col style="width:${w.toFixed(2)}%">`; });
+  cg += '</colgroup>';
+
+  if (!hasGroups) {
+    return `${cg}<thead><tr class="columns-head">
+      ${showRowNum ? '<th>#</th>' : ''}
+      ${cols.map(c => `<th>${escapeHtml(c.label) || '&nbsp;'}</th>`).join('')}
+    </tr></thead>`;
+  }
+
+  const row1 = [];
+  if (showRowNum) row1.push('<th rowspan="2">#</th>');
+  let i = 0;
+  while (i < cols.length) {
+    if (cols[i].group) {
+      let j = i;
+      while (j < cols.length && cols[j].group === cols[i].group) j++;
+      row1.push(`<th colspan="${j - i}" class="group-th">${escapeHtml(cols[i].group)}</th>`);
+      i = j;
+    } else {
+      row1.push(`<th rowspan="2">${escapeHtml(cols[i].label)}</th>`);
+      i++;
+    }
+  }
+  const row2 = cols.filter(c => c.group).map(c => `<th>${escapeHtml(c.label)}</th>`).join('');
+  return `${cg}<thead><tr class="group-head">${row1.join('')}</tr><tr class="columns-head">${row2}</tr></thead>`;
+}
+
+// ============ MOBILE SCALE & THEME ============
+function applyMobileScale() {
+  const sc = $('sheets');
+  if (!sc) return;
+  const paper = sc.querySelector('.paper');
+  if (!paper) { sc.style.transform = ''; sc.style.marginBottom = ''; return; }
+  const parent = sc.parentElement;
+  if (!parent) return;
+  const paperW = paper.offsetWidth, availW = parent.clientWidth - 16;
+  if (!paperW || !availW || paperW <= availW) {
+    sc.style.transform = ''; sc.style.marginBottom = ''; return;
+  }
+  const scale = availW / paperW;
+  sc.style.transformOrigin = 'top center';
+  sc.style.transform = `scale(${scale})`;
+  sc.style.marginBottom = `-${sc.offsetHeight * (1 - scale)}px`;
+}
+
+function applyTheme(mode) {
+  document.documentElement.dataset.theme = mode;
+  const btn = $('themeBtn');
+  if (btn) { btn.innerHTML = mode === 'dark' ? '<i data-lucide="sun"></i>' : '<i data-lucide="moon"></i>'; refreshIcons(); }
+  try { localStorage.setItem(KEYS.theme, mode); } catch {}
+}
+function toggleTheme() { applyTheme(document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark'); }
+
+function setRangeMode(mode, silent) {
+  document.querySelectorAll('.range-modes button').forEach(b => b.classList.toggle('active', b.dataset.range === mode));
+  $('rangeMonth').hidden = mode !== 'month';
+  $('rangeRange').hidden = mode !== 'range';
+  $('rangeDays').hidden = mode !== 'days';
+  if (!silent) schedulePreview();
+}
+
+// ============ EVENTS ============
+function bindEvents() {
+  $('themeBtn').onclick = toggleTheme;
+
+  document.querySelectorAll('.mtab').forEach(b => {
+    b.onclick = () => {
+      document.querySelectorAll('.mtab').forEach(x => x.classList.toggle('active', x === b));
+      const layout = document.querySelector('.app-layout');
+      layout.classList.toggle('show-settings', b.dataset.tab === 'settings');
+      layout.classList.toggle('show-preview', b.dataset.tab === 'preview');
+      if (b.dataset.tab === 'preview') setTimeout(applyMobileScale, 50);
+    };
+  });
+
+  // Logo Upload
+  $('logoInput').onchange = e => {
+    const f = e.target.files[0]; if (!f) return;
+    const r = new FileReader();
+    r.onload = ev => {
+      Settings.set({ logoUrl: ev.target.result });
+      renderLogoPreview();
+      buildPreview();
+      toast('تم رفع الشعار', 'success');
+    };
+    r.readAsDataURL(f);
+  };
+  $('clearLogoBtn').onclick = () => {
+    Settings.set({ logoUrl: null });
+    renderLogoPreview();
+    buildPreview();
+    toast('تم حذف الشعار', 'success');
+  };
+
+  // Presets
+  $('tsPreset').onchange = e => {
+    const preset = PRESETS[e.target.value];
+    if (preset) {
+      $('tsAlign').value = preset.align;
+      $('tsBorderColor').value = preset.borderColor;
+      $('tsBorderWidth').value = preset.borderWidth;
+      $('tsBorderStyle').value = preset.borderStyle;
+      $('tsPadding').value = preset.padding;
+      $('tsHeaderBg').value = preset.headerBg;
+      $('tsHeaderColor').value = preset.headerColor;
+      $('tsCellColor').value = preset.cellColor;
+      $('tsFont').value = preset.font;
+      $('tsZebra').checked = preset.zebra;
+      $('tsZebraColor').value = preset.zebraColor;
+      
+      captureConfig();
+      schedulePreview();
+    }
+  };
+
+  // Inputs
+  const saveOnInput = el => {
+    el.addEventListener('input', () => { if (_applying) return; captureConfig(); schedulePreview(); });
+    el.addEventListener('change', () => { if (_applying) return; captureConfig(); schedulePreview(); });
+  };
+  ['hMain','hSub','hSize','hColor','hAlign','hOrientation','hLogoPosition','hLogoSize',
+   'hShowLogo','hShowSub','hShowSeq','hShowPage','hShowRowNum',
+   'cPeriod','cExpected','cActual','cLesson','cRevision','cCircle','cTeacher','cStudents','cCopies',
+   'cMonth','cMonthDays','cStart','cEnd','cSpecificDays',
+   'tsAlign','tsBorderColor','tsBorderWidth','tsBorderStyle','tsHeaderBg','tsHeaderColor','tsCellColor','tsPadding','tsFont','tsZebra','tsZebraColor',
+   'fontScale','cellSize','headSize','headHeight','cRows','cRowHeight'].forEach(id => {
+    const el = $(id);
+    if (el) saveOnInput(el);
+  });
+  $('fontScale').addEventListener('input', () => {
+    $('fontScaleVal').textContent = parseFloat($('fontScale').value).toFixed(2) + 'x';
+  });
+  document.querySelectorAll('.days input').forEach(cb => saveOnInput(cb));
+
+  document.querySelectorAll('.range-modes button').forEach(b => {
+    b.onclick = () => { if (_applying) return; setRangeMode(b.dataset.range); captureConfig(); schedulePreview(); };
+  });
+  document.querySelectorAll('[data-days]').forEach(b => {
+    b.onclick = () => {
+      const all = b.dataset.days === 'all';
+      document.querySelectorAll(`#${b.dataset.target} input`).forEach(cb => cb.checked = all);
+      captureConfig(); schedulePreview();
+    };
+  });
+
+  // Actions
+  $('applyHeightBtn').onclick = () => {
+    const h = parseFloat($('cRowHeight').value) || 7;
+    const cfg = Store.current(); if (!cfg) return;
+    cfg.columns.forEach(c => c.height = h);
+    Store.update(cfg); renderColumns(cfg.columns); schedulePreview(); toast('تم التوحيد', 'success');
+  };
+  $('autoFitBtn').onclick = () => {
+    const cfg = Store.current(); if (!cfg) return;
+    const rows = parseInt($('cRows').value, 10) || 30;
+    const hasGroups = cfg.columns.some(c => c.group);
+    const avail = cfg.orientation === 'landscape' ? 110 : 160;
+    const rowH = Math.max(2.5, Math.min(20, (avail - cfg.layout.headHeight - (hasGroups ? 7 : 0)) / rows));
+    $('cRowHeight').value = rowH.toFixed(1);
+    cfg.columns.forEach(c => c.height = rowH);
+    Store.update(cfg); renderColumns(cfg.columns); schedulePreview(); toast('تم ضبط الارتفاع', 'success');
+  };
+  $('addColBtn').onclick = () => {
+    const cfg = Store.current(); if (!cfg) return;
+    if (cfg.columns.length >= 18) return;
+    cfg.columns.push({ id: uid(), label: 'عمود', width: 10, height: parseFloat($('cRowHeight').value) || 7 });
+    Store.update(cfg); renderColumns(cfg.columns); schedulePreview();
+  };
+  $('resetColsBtn').onclick = () => {
+    if (!confirm('استعادة الأعمدة الافتراضية؟')) return;
+    const cfg = Store.current(); if (!cfg) return;
+    cfg.columns = JSON.parse(JSON.stringify((BASE_TEMPLATES[Store.currentTypeId] || BASE_TEMPLATES.taahado).columns));
+    Store.update(cfg); renderColumns(cfg.columns); schedulePreview();
+  };
+  $('addMetaBtn').onclick = () => {
+    const cfg = Store.current(); if (!cfg) return;
+    cfg.metaFields.push({ id: 'f' + Date.now(), label: 'حقل', value: 'blank', width: 'half' });
+    Store.update(cfg); renderMeta(cfg.metaFields); schedulePreview();
+  };
+
+  $('buildBtn').onclick = () => { captureConfig(); buildPreview(); applyMobileScale(); toast('تم التحديث', 'success'); };
+  $('printBtn').onclick = () => { captureConfig(); buildPreview(); setTimeout(() => window.print(), 150); };
+  $('clearBtn').onclick = () => {
+    $('sheets').innerHTML = `<div class="blank"><i data-lucide="file-text"></i><span>فارغ</span></div>`;
+    refreshIcons();
+  };
+
+  window.addEventListener('resize', debounce(applyMobileScale, 150));
+}
+
+function renderLogoPreview() {
+  const logo = Settings.logo();
+  $('logoPreview').innerHTML = logo ? `<img src="${logo}" style="max-height:50px;margin:0 auto">` : `<div style="font-size:11px;color:var(--text-muted)">لا يوجد شعار</div>`;
+}
+
+// ============ INIT ============
+function init() {
+  Store.init();
+  const theme = localStorage.getItem(KEYS.theme) || 'light';
+  applyTheme(theme);
+  
+  bindEvents();
+  renderLogoPreview();
+  
+  // Load types/templates
+  const renderTypes = () => {
+    $('typeList').innerHTML = Store.types.map(ty =>
+      `<button data-type="${escapeHtml(ty.id)}" class="${ty.id === Store.currentTypeId ? 'active' : ''}">${escapeHtml(ty.name)}</button>`
+    ).join('');
+    $('typeList').querySelectorAll('button').forEach(b => {
+      b.onclick = () => {
+        if (b.dataset.type === Store.currentTypeId) return;
+        captureConfig();
+        Store.currentTypeId = b.dataset.type;
+        Store.activeTemplateName = Object.keys(Store.templates[Store.currentTypeId] || {})[0];
+        Store.save();
+        applyConfig(Store.current());
+        renderAll();
+        schedulePreview();
+      };
+    });
+  };
+
+  const renderTemplates = () => {
+    const list = Store.templates[Store.currentTypeId] || {};
+    $('tplList').innerHTML = Object.keys(list).map(name => `
+      <div class="tpl-item ${name === Store.activeTemplateName ? 'active' : ''}">
+        <span>${name === Store.activeTemplateName ? `<span class="badge">نشط</span>` : ''}${escapeHtml(name)}</span>
+        <div class="tpl-actions">
+          ${name !== Store.activeTemplateName ? `<button class="apply" data-act="apply" data-name="${escapeHtml(name)}">تطبيق</button>` : ''}
+          <button class="copy" data-act="copy" data-name="${escapeHtml(name)}"><i data-lucide="copy"></i></button>
+          <button class="rename" data-act="rename" data-name="${escapeHtml(name)}"><i data-lucide="edit-2"></i></button>
+          <button class="del" data-act="delete" data-name="${escapeHtml(name)}"><i data-lucide="trash-2"></i></button>
+        </div>
+      </div>
+    `).join('');
+    refreshIcons();
+    $('tplList').querySelectorAll('[data-act]').forEach(btn => {
+      btn.onclick = () => {
+        const name = btn.dataset.name, act = btn.dataset.act;
+        if (act === 'apply') {
+          captureConfig();
+          Store.activeTemplateName = name;
+          Store.save();
+          applyConfig(Store.current());
+          renderTemplates();
+          schedulePreview();
+          toast('تم التطبيق', 'success');
+        } else if (act === 'copy') {
+          const nn = prompt('اسم النسخة الجديدة:', name + ' - copy');
+          if (!nn || list[nn]) return;
+          Store.templates[Store.currentTypeId][nn] = JSON.parse(JSON.stringify(list[name]));
+          Store.save(); renderTemplates(); toast('تم النسخ', 'success');
+        } else if (act === 'rename') {
+          const nn = prompt('الاسم الجديد:', name);
+          if (!nn || nn === name || list[nn]) return;
+          Store.templates[Store.currentTypeId][nn] = list[name];
+          delete Store.templates[Store.currentTypeId][name];
+          if (Store.activeTemplateName === name) Store.activeTemplateName = nn;
+          Store.save(); renderTemplates(); toast('تم التعديل', 'success');
+        } else if (act === 'delete') {
+          if (Object.keys(list).length <= 1) { toast('لا يمكن الحذف', 'error'); return; }
+          if (!confirm('تأكيد الحذف؟')) return;
+          delete Store.templates[Store.currentTypeId][name];
+          if (Store.activeTemplateName === name) Store.activeTemplateName = Object.keys(Store.templates[Store.currentTypeId])[0];
+          Store.save(); applyConfig(Store.current()); renderTemplates(); schedulePreview(); toast('تم الحذف', 'success');
+        }
+      };
+    });
+  };
+
+  const renderAll = () => { renderTypes(); renderTemplates(); };
+  
+  // Initial render
+  renderAll();
+  applyConfig(Store.current());
+  buildPreview();
+  applyMobileScale();
+  refreshIcons();
+
+  // Template Actions
+  $('addTypeBtn').onclick = () => {
+    const name = prompt('اسم النوع الجديد:'); if (!name) return;
+    const id = 'type_' + Date.now();
+    Store.types.push({ id, name });
+    Store.templates[id] = { default: buildDefaultConfig(id, name) };
+    Store.currentTypeId = id; Store.activeTemplateName = 'default';
+    Store.save(); applyConfig(Store.current()); renderAll(); schedulePreview(); toast('تم الإنشاء', 'success');
+  };
+  $('renameTypeBtn').onclick = () => {
+    const ty = Store.types.find(x => x.id === Store.currentTypeId); if (!ty) return;
+    const nn = prompt('الاسم الجديد:', ty.name); if (!nn) return;
+    ty.name = nn; Store.save(); renderAll(); toast('تم التعديل', 'success');
+  };
+  $('deleteTypeBtn').onclick = () => {
+    if (Store.types.length <= 1 || !confirm('تأكيد الحذف؟')) return;
+    Store.types = Store.types.filter(x => x.id !== Store.currentTypeId);
+    delete Store.templates[Store.currentTypeId];
+    Store.currentTypeId = Store.types[0].id;
+    Store.activeTemplateName = Object.keys(Store.templates[Store.currentTypeId])[0];
+    Store.save(); applyConfig(Store.current()); renderAll(); schedulePreview(); toast('تم الحذف', 'success');
+  };
+  $('createTplBtn').onclick = () => {
+    const name = $('newTplName').value.trim(); if (!name) return;
+    if (Store.templates[Store.currentTypeId][name]) return;
+    Store.templates[Store.currentTypeId][name] = buildDefaultConfig(Store.currentTypeId, name);
+    Store.activeTemplateName = name; $('newTplName').value = '';
+    Store.save(); applyConfig(Store.current()); renderTemplates(); schedulePreview(); toast('تم الإنشاء', 'success');
+  };
+  $('exportBtn').onclick = () => {
+    const blob = new Blob([JSON.stringify({ types: Store.types, templates: Store.templates }, null, 2)], { type: 'application/json' });
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'backup.json'; a.click();
+  };
+  $('importBtn').onclick = () => $('importFile').click();
+  $('importFile').onchange = e => {
+    const f = e.target.files[0]; if (!f) return;
+    const r = new FileReader();
+    r.onload = ev => {
+      try {
+        const data = JSON.parse(ev.target.result);
+        if (data.templates && data.types) {
+          Store.templates = data.templates; Store.types = data.types;
+          Store.currentTypeId = data.types[0].id;
+          Store.types.forEach(t => {
+            if (!Store.templates[t.id]) Store.templates[t.id] = {};
+            for (let name in Store.templates[t.id]) {
+              Store.templates[t.id][name] = sanitizeConfig(Store.templates[t.id][name], t.id, name);
+            }
+          });
+          Store.activeTemplateName = Object.keys(Store.templates[Store.currentTypeId] || {})[0];
+          Store.save(); applyConfig(Store.current()); renderAll(); schedulePreview(); toast('تم الاستيراد', 'success');
+        }
+      } catch { toast('ملف غير صالح', 'error'); }
+      e.target.value = '';
+    };
+    r.readAsText(f);
+  };
+}
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>

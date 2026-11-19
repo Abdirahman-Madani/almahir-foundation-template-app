@@ -1,0 +1,386 @@
+{
+  "templates": {
+    "taahado": {
+      "الدوام الكلي": {
+        "columns": [
+          {
+            "label": "التاريخ",
+            "width": 9,
+            "height": 7.5
+          },
+          {
+            "label": "اليوم",
+            "width": 9,
+            "height": 7.5
+          },
+          {
+            "label": "من – إلى",
+            "width": 20,
+            "height": 7.5,
+            "group": "الورد اليومي"
+          },
+          {
+            "label": "الرجوع",
+            "width": 8,
+            "height": 7.5,
+            "group": "الورد اليومي"
+          },
+          {
+            "label": "الفتح",
+            "width": 8,
+            "height": 7.5,
+            "group": "الورد اليومي"
+          },
+          {
+            "label": "تردد",
+            "width": 8,
+            "height": 7.5,
+            "group": "الورد اليومي"
+          },
+          {
+            "label": "التقدير",
+            "width": 10,
+            "height": 7.5
+          },
+          {
+            "label": "ملاحظات",
+            "width": 29,
+            "height": 7.5
+          }
+        ],
+        "metaFields": [
+          {
+            "id": "f1",
+            "label": "اسم الطالب/ة",
+            "value": "student_name",
+            "width": "half"
+          },
+          {
+            "id": "f5",
+            "label": "المقدار ",
+            "value": "lesson",
+            "width": "half"
+          },
+          {
+            "id": "f4",
+            "label": "الفترة",
+            "value": "period",
+            "width": "half"
+          },
+          {
+            "id": "f1794836845852",
+            "label": "الختمة",
+            "value": "blank",
+            "width": "half"
+          },
+          {
+            "id": "f7",
+            "label": "التاريخ المتوقع لانتهاء الختمة",
+            "value": "expected",
+            "width": "half"
+          },
+          {
+            "id": "f8",
+            "label": "التاريخ الفعلي لانتهاء الختمة",
+            "value": "actual",
+            "width": "half"
+          }
+        ],
+        "rows": 30,
+        "orientation": "portrait",
+        "layout": {
+          "rowHeight": "7.5",
+          "headHeight": "7",
+          "cellSize": "10",
+          "headSize": "10"
+        },
+        "header": {
+          "main": "متابعة طلبة برنامج  تعاهدوا 2026",
+          "sub": "",
+          "size": "14",
+          "color": "#000000",
+          "align": "center",
+          "showLogo": true,
+          "showSub": true,
+          "showSeq": false,
+          "showPage": false,
+          "showRowNum": false
+        },
+        "tableStyle": {
+          "borderColor": "#111111",
+          "borderWidth": 1,
+          "borderStyle": "solid",
+          "headerBg": "#f8fafc",
+          "headerColor": "#000000",
+          "cellColor": "#000000",
+          "padding": 3,
+          "font": "Tahoma, sans-serif",
+          "zebra": false,
+          "zebraColor": "#f1f5f9"
+        }
+      }
+    },
+    "monthly": {
+      "الدوام الكلي": {
+        "columns": [
+          {
+            "label": "التاريخ",
+            "width": 5,
+            "height": 6.7,
+            "field": "date"
+          },
+          {
+            "label": "اليوم",
+            "width": 9,
+            "height": 6.7,
+            "field": "weekday"
+          },
+          {
+            "label": "السورة",
+            "width": 10,
+            "height": 6.7,
+            "group": "الحفظ اليومي"
+          },
+          {
+            "label": "من",
+            "width": 7,
+            "height": 6.7,
+            "group": "الحفظ اليومي"
+          },
+          {
+            "label": "إلى",
+            "width": 7,
+            "height": 6.7,
+            "group": "الحفظ اليومي"
+          },
+          {
+            "label": "التقدير",
+            "width": 7,
+            "height": 6.7
+          },
+          {
+            "label": "السورة",
+            "width": 10,
+            "height": 6.7,
+            "group": "مراجعة (دربس)"
+          },
+          {
+            "label": "من",
+            "width": 7,
+            "height": 6.7,
+            "group": "مراجعة (دربس)"
+          },
+          {
+            "label": "إلى",
+            "width": 7,
+            "height": 6.7,
+            "group": "مراجعة (دربس)"
+          },
+          {
+            "label": "التقدير",
+            "width": 7,
+            "height": 6.7
+          },
+          {
+            "label": "ملاحظات",
+            "width": 24,
+            "height": 6.7
+          }
+        ],
+        "metaFields": [
+          {
+            "id": "f1",
+            "label": "اسم الطالب/ة",
+            "value": "student_name",
+            "width": "half"
+          },
+          {
+            "id": "f2",
+            "label": "الأستاذ/ة",
+            "value": "teacher",
+            "width": "half"
+          },
+          {
+            "id": "f5",
+            "label": "مقدار الدرس",
+            "value": "lesson",
+            "width": "half"
+          },
+          {
+            "id": "f6",
+            "label": "مقدار المراجعة",
+            "value": "revision",
+            "width": "half"
+          }
+        ],
+        "rows": 30,
+        "orientation": "landscape",
+        "layout": {
+          "rowHeight": "6.7",
+          "headHeight": "8",
+          "cellSize": "10",
+          "headSize": "10"
+        },
+        "header": {
+          "main": "متابعة الطالب لشهر نوفمبر2026",
+          "sub": "",
+          "size": "14",
+          "color": "#000000",
+          "align": "center",
+          "showLogo": true,
+          "showSub": true,
+          "showSeq": false,
+          "showPage": false,
+          "showRowNum": false
+        },
+        "tableStyle": {
+          "borderColor": "#111111",
+          "borderWidth": 1,
+          "borderStyle": "solid",
+          "headerBg": "#f8fafc",
+          "headerColor": "#000000",
+          "cellColor": "#000000",
+          "padding": 3,
+          "font": "Tahoma, sans-serif",
+          "zebra": false,
+          "zebraColor": "#f1f5f9"
+        }
+      },
+      "الدوام الجزئي": {
+        "columns": [
+          {
+            "label": "التاريخ",
+            "width": 5,
+            "height": 6.7,
+            "field": "date"
+          },
+          {
+            "label": "اليوم",
+            "width": 9,
+            "height": 6.7,
+            "field": "weekday"
+          },
+          {
+            "label": "السورة",
+            "width": 10,
+            "height": 6.7,
+            "group": "الحفظ اليومي"
+          },
+          {
+            "label": "من",
+            "width": 7,
+            "height": 6.7,
+            "group": "الحفظ اليومي"
+          },
+          {
+            "label": "إلى",
+            "width": 7,
+            "height": 6.7,
+            "group": "الحفظ اليومي"
+          },
+          {
+            "label": "التقدير",
+            "width": 7,
+            "height": 6.7
+          },
+          {
+            "label": "السورة",
+            "width": 10,
+            "height": 6.7,
+            "group": "مراجعة (دربس)"
+          },
+          {
+            "label": "من",
+            "width": 7,
+            "height": 6.7,
+            "group": "مراجعة (دربس)"
+          },
+          {
+            "label": "إلى",
+            "width": 7,
+            "height": 6.7,
+            "group": "مراجعة (دربس)"
+          },
+          {
+            "label": "التقدير",
+            "width": 7,
+            "height": 6.7
+          },
+          {
+            "label": "ملاحظات",
+            "width": 24,
+            "height": 6.7
+          }
+        ],
+        "metaFields": [
+          {
+            "id": "f1",
+            "label": "اسم الطالب/ة",
+            "value": "student_name",
+            "width": "half"
+          },
+          {
+            "id": "f2",
+            "label": "الأستاذ/ة",
+            "value": "teacher",
+            "width": "half"
+          },
+          {
+            "id": "f5",
+            "label": "مقدار الدرس",
+            "value": "lesson",
+            "width": "half"
+          },
+          {
+            "id": "f6",
+            "label": "مقدار المراجعة",
+            "value": "revision",
+            "width": "half"
+          }
+        ],
+        "rows": 30,
+        "orientation": "landscape",
+        "layout": {
+          "rowHeight": "6.7",
+          "headHeight": "8",
+          "cellSize": "10",
+          "headSize": "10"
+        },
+        "header": {
+          "main": "متابعة الطالب لشهر نوفمبر2026",
+          "sub": "",
+          "size": "14",
+          "color": "#000000",
+          "align": "center",
+          "showLogo": true,
+          "showSub": true,
+          "showSeq": false,
+          "showPage": false,
+          "showRowNum": false
+        },
+        "tableStyle": {
+          "borderColor": "#111111",
+          "borderWidth": 1,
+          "borderStyle": "solid",
+          "headerBg": "#f8fafc",
+          "headerColor": "#000000",
+          "cellColor": "#000000",
+          "padding": 3,
+          "font": "Tahoma, sans-serif",
+          "zebra": false,
+          "zebraColor": "#f1f5f9"
+        }
+      }
+    }
+  },
+  "types": [
+    {
+      "id": "taahado",
+      "name": "تعاهدوا"
+    },
+    {
+      "id": "monthly",
+      "name": "الحفظ الشهري"
+    }
+  ]
+}
